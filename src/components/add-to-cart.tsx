@@ -1,15 +1,29 @@
-import React, { useContext } from "react";
-import { CartContext } from "../../pages/_app";
+import React from "react";
 
-const AddToCart = ({ productId }: { productId: number }) => {
-  const { data, modifyCount } = useContext(CartContext);
-  const product = data.filter((item) => item.id == productId)[0];
+import { useSelector, useDispatch } from "react-redux";
+
+import { selectData, modify, updateData } from "../../app/cartSlice";
+import { ICartData } from "../../app/types/cartTypes";
+
+const AddToCart = ({ dataItem }: { dataItem: ICartData }) => {
+  const dispatch = useDispatch();
+
+  const data = useSelector(selectData);
+
+  const modifyCount = (data: ICartData) => {
+    dispatch(modify(data));
+  };
+
+  // const product = data.filter((item) => item.id === productId)[0];
+  const product = dataItem;
+  const productId = dataItem.id;
+
   return (
     <div className="w-full border border-[#1d7cbf] font-bold">
       {product.count == 0 ? (
         <div
           onClick={() => {
-            modifyCount(productId, product.count, 1);
+            modifyCount({ ...dataItem, count: 1 });
           }}
           className="w-full text-center text-[#1d7cbf] py-2"
         >
@@ -19,7 +33,8 @@ const AddToCart = ({ productId }: { productId: number }) => {
         <div className="w-full text-center grid grid-cols-4 ">
           <div
             onClick={() => {
-              modifyCount(productId, product.count, -1);
+              modifyCount({ ...dataItem, count: dataItem.count - 1 });
+              // modifyCount(productId, product.count, -1);
             }}
             className="col-span-1 py-2 bg-[#1d7cbf] text-white flex justify-center items-center"
           >
@@ -28,7 +43,7 @@ const AddToCart = ({ productId }: { productId: number }) => {
           <div className="col-span-2 py-2"> {product.count}</div>
           <div
             onClick={() => {
-              modifyCount(productId, product.count, 1);
+              modifyCount({ ...dataItem, count: dataItem.count + 1 });
             }}
             className="col-span-1 py-2 bg-[#1d7cbf] text-white"
           >

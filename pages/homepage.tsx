@@ -1,11 +1,14 @@
 import { NextPage } from "next/types";
-import { useState } from "react";
+import { useSelector } from "react-redux";
 import Products from "../src/components/products";
 import TopNav from "../src/components/top-nav";
 
+import { selectData } from "../app/cartSlice";
+
 const Homepage: NextPage = () => {
-  const [initData, setInitData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const data = useSelector(selectData);
+
+  if (!data) return <div>Loading...</div>;
 
   return (
     <div className="text-slate-700">

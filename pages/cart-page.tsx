@@ -1,43 +1,14 @@
 import Link from "next/link";
 import React, { useContext, useState } from "react";
-import AddToCart from "../src/components/add-to-cart";
+import { useSelector } from "react-redux";
+import { selectData } from "../app/cartSlice";
+import OrderItem from "../src/components/order-item";
+import ReceiptItem from "../src/components/receipt-item";
 import Separator from "../src/components/separator";
 import TopNav from "../src/components/top-nav";
-import { CartContext } from "./_app";
-
-const ReceiptItem = ({ qty, price }: { qty: number; price: number }) => {
-  return (
-    <div className="flex justify-between items-center">
-      <div>
-        {qty} x {price}
-      </div>
-      <div>{qty * price}</div>
-    </div>
-  );
-};
-
-const OrderItem = ({
-  idx,
-  name,
-  id,
-}: {
-  idx: number;
-  name: string;
-  id: number;
-}) => {
-  return (
-    <div className={` grid grid-cols-4 p-3 items-center`}>
-      <div className="">{idx + 1}</div>
-      <div className="">{name}</div>
-      <div className="col-span-2 pl-4">
-        <AddToCart productId={id} />
-      </div>
-    </div>
-  );
-};
 
 const MainContent = () => {
-  const { data, modifyCount } = useContext(CartContext);
+  const data = useSelector(selectData);
   const itemsInCart = data.filter((item) => item.count > 0);
 
   const purchaseDetail = { totalPrice: 0, totalDiscount: 0, totalItems: 0 };
@@ -72,7 +43,7 @@ const MainContent = () => {
                 )}
               </div>
               <div className="grid md:grid-cols-11 pt-5">
-                {/* left box */}
+                {/* Order List */}
                 <div className="md:col-span-6 border border-slate-300 p-4 md:mr-4">
                   <div className="grid grid-cols-4 p-3">
                     <div className="">S.NO.</div>
@@ -83,14 +54,7 @@ const MainContent = () => {
                   <Separator className="bg-slate-300" />
                   <div className="p-3">
                     {itemsInCart.map((item, idx) => {
-                      return (
-                        <OrderItem
-                          key={item.id}
-                          idx={idx}
-                          name={item.name}
-                          id={item.id}
-                        />
-                      );
+                      return <OrderItem key={item.id} idx={idx} item={item} />;
                     })}
                   </div>
                   <Separator className="bg-slate-300 mb-3" />
@@ -101,7 +65,7 @@ const MainContent = () => {
                     </span>
                   </Link>
                 </div>
-                {/* right box */}
+                {/* Receipt Box*/}
                 <div className="md:col-span-5 borer bg-slate-100 border-slate-300 md:ml-3 mt-5 md:mt-0 p-4">
                   <div className="pl-4">Price Details</div>
                   <Separator className="bg-slate-300 my-3" />

@@ -1,10 +1,15 @@
 import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CartContext } from "../../pages/_app";
+
+import { useSelector } from "react-redux";
+
+// import { CartContext } from "../../pages/_app";
+import { selectData } from "../../app/cartSlice";
 
 const TopNav = () => {
-  const { data } = useContext(CartContext);
+  // const { data } = useContext(CartContext);
+  const data = useSelector(selectData);
   const totalItems = data.reduce((acc, curr) => {
     return (acc += curr.count);
   }, 0);
